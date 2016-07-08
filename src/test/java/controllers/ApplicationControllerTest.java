@@ -16,24 +16,27 @@
 
 package controllers;
 
+
 import models.User;
 import ninja.Result;
-import ninja.Results;
+import org.junit.Test;
 
-import com.google.inject.Singleton;
+import static org.junit.Assert.assertEquals;
 
+public class ApplicationControllerTest {
 
-@Singleton
-public class ApplicationController {
+    @Test
+    public void testGetUser() {
+        ApplicationController controller = new ApplicationController();
+        Result result = controller.user();
+        User userResult = (User) result.getRenderable();
 
-    public Result index() {
-        return Results.html().template("views/ApplicationController/index.ftl.html");
-    }
-
-    public Result user() {
-        User user = new User();
-
-        return Results.json().render(user);
+        assertEquals(result.getContentType(), "application/json");
+        assertEquals(200, result.getStatusCode());
+        assertEquals("johncleese", userResult.username);
+        assertEquals("John", userResult.firstName);
+        assertEquals("Cleese", userResult.lastName);
+        assertEquals("password", userResult.password);
     }
 
 }
