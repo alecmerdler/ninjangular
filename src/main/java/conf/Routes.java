@@ -17,10 +17,9 @@
 package conf;
 
 
-import ninja.AssetsController;
+import controllers.ApplicationController;
 import ninja.Router;
 import ninja.application.ApplicationRoutes;
-import controllers.ApplicationController;
 
 public class Routes implements ApplicationRoutes {
 
@@ -30,18 +29,10 @@ public class Routes implements ApplicationRoutes {
         router.GET().route("/").with(ApplicationController.class, "index");
 
         router.GET().route("/user").with(ApplicationController.class, "user");
-        
- 
-        ///////////////////////////////////////////////////////////////////////
-        // Assets (pictures / javascript)
-        ///////////////////////////////////////////////////////////////////////    
-        router.GET().route("/assets/webjars/{fileName: .*}").with(AssetsController.class, "serveWebJars");
-        router.GET().route("/assets/{fileName: .*}").with(AssetsController.class, "serveStatic");
-        
-        ///////////////////////////////////////////////////////////////////////
-        // Index / Catchall shows index page
-        ///////////////////////////////////////////////////////////////////////
-        router.GET().route("/.*").with(ApplicationController.class, "index");
+        router.GET().route("/user/{parent-name}").with(ApplicationController.class, "parent");
+
+        router.POST().route("/user").with(ApplicationController.class, "createUser");
+
     }
 
 }

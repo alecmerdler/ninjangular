@@ -14,13 +14,11 @@ public class User {
     private String catchphrase;
 
     public User() {
-        firstName = "John";
-        lastName = "Cleese";
-        username = "johncleese";
-        password = "password";
-        catchphrase = "yo";
-        parent = new User();
-        parent.username = "montypython";
+        this.firstName = "John";
+        this.lastName = "Cleese";
+        this.username = "johncleese";
+        this.password = "password";
+        this.catchphrase = "yo";
     }
 
     public void changePassword(String newPassword) {
@@ -31,5 +29,9 @@ public class User {
 
     public String sayCatchphrase() {
         return this.catchphrase;
+    }
+
+    public void giveParent(User parent) {
+        this.parent =  parent;
     }
 }

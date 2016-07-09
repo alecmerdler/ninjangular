@@ -16,22 +16,48 @@
 
 package controllers;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import models.User;
 import ninja.Result;
 import ninja.Results;
-
-import com.google.inject.Singleton;
+import ninja.params.PathParam;
+import services.UserFactory;
 
 
 @Singleton
 public class ApplicationController {
+    private UserFactory userFactory;
+
+    @Inject
+    public ApplicationController(UserFactory userFactory) {
+        this.userFactory = userFactory;
+    }
 
     public Result index() {
-        return Results.html().template("views/ApplicationController/index.ftl.html");
+        return Results.json().render("");
     }
 
     public Result user() {
-        User user = new User();
+        User user = this.userFactory.createUser();
+        User parent = this.userFactory.createUser();
+        user.giveParent(parent);
+
+        return Results.json().render(user);
+    }
+
+    public Result createUser(User requestUser) {
+        User user = this.userFactory.createUser();
+        user.username = requestUser.username;
+
+        return Results.json().render(user);
+    }
+
+    public Result parent(@PathParam("parent-name") String parentName) {
+        User user = this.userFactory.createUser();
+        User parent = this.userFactory.createUser();
+        parent.username = parentName;
+        user.giveParent(parent);
 
         return Results.json().render(user);
     }

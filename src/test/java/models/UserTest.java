@@ -32,7 +32,7 @@ public class UserTest {
         User user = new User();
         String originalPassword = user.password;
 
-        user.changePassword(";lkasjdf;lsadkjfl;dasjfl;sadjflkajsldfjlkjlk;j;ljlkjlkjljl");
+        user.changePassword("thisIsAReallyLongPasswordThatDefinitelyExceedsTheLengthRequirements");
 
         assertEquals(originalPassword, user.password);
     }
@@ -44,5 +44,15 @@ public class UserTest {
         String catchphrase = user.sayCatchphrase();
 
         assertEquals("yo", catchphrase);
+    }
+
+    @Test
+    public void testGiveParent() {
+        User user = new User();
+        User parent = new User();
+
+        user.giveParent(parent);
+
+        assertEquals(parent, user.parent);
     }
 }

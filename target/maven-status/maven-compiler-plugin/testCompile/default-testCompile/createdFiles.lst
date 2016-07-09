@@ -1,1 +1,3 @@
-controllers/ApiControllerDocTesterTest.class
+controllers/ApplicationControllerTest.class
+models/UserTest.class
+services/UserFactoryTest.class

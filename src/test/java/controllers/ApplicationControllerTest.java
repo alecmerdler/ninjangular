@@ -19,24 +19,74 @@ package controllers;
 
 import models.User;
 import ninja.Result;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import services.UserFactory;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ApplicationControllerTest {
+    ApplicationController controller;
+
+    @Mock
+    UserFactory userFactoryMock;
+
+    @Before
+    public void beforeEach() {
+        controller = new ApplicationController(userFactoryMock);
+
+        when(userFactoryMock.createUser()).thenReturn(new User());
+    }
+
+    @Test
+    public void testGetIndex() {
+        Result result = this.controller.index();
+
+        assertEquals("", result.getRenderable());
+    }
 
     @Test
     public void testGetUser() {
-        ApplicationController controller = new ApplicationController();
-        Result result = controller.user();
-        User userResult = (User) result.getRenderable();
+        Result result = this.controller.user();
+        User user = (User) result.getRenderable();
 
+        verify(userFactoryMock, times(2)).createUser();
         assertEquals(result.getContentType(), "application/json");
         assertEquals(200, result.getStatusCode());
-        assertEquals("johncleese", userResult.username);
-        assertEquals("John", userResult.firstName);
-        assertEquals("Cleese", userResult.lastName);
-        assertEquals("password", userResult.password);
+        assertEquals("johncleese", user.username);
+        assertEquals("John", user.firstName);
+        assertEquals("Cleese", user.lastName);
+        assertEquals("password", user.password);
+        assertEquals("johncleese", user.parent.username);
+    }
+
+    @Test
+    public void testGetParent() {
+        Result result = this.controller.parent("parent");
+        User user = (User) result.getRenderable();
+
+        assertEquals("application/json", result.getContentType());;
+        assertEquals(200, result.getStatusCode());
+        assertEquals("parent", user.parent.username);
+    }
+
+    @Test
+    public void testCreateUser() {
+        User requestUser = new User();
+        requestUser.username = "bob";
+
+        Result result = this.controller.createUser(requestUser);
+        User user = (User) result.getRenderable();
+
+        assertEquals(200, result.getStatusCode());
+        assertEquals(requestUser.username, user.username);
     }
 
 }
