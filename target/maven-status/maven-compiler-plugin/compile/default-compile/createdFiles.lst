@@ -1,5 +1,0 @@
-conf/Routes.class
-models/User.class
-services/UserFactory.class
-controllers/ApplicationController.class
-conf/Module.class
