@@ -26,10 +26,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import services.UserFactory;
 
+import java.util.HashMap;
+
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationControllerTest {
@@ -46,14 +46,16 @@ public class ApplicationControllerTest {
     }
 
     @Test
-    public void testGetIndex() {
+    public void testIndex() {
         Result result = this.controller.index();
+        HashMap<String, String> resultMap = (HashMap<String, String>) result.getRenderable();
 
-        assertEquals("", result.getRenderable());
+        assertEquals(200, result.getStatusCode());
+        assertEquals("Welcome!", resultMap.get("title"));
     }
 
     @Test
-    public void testGetUser() {
+    public void testUser() {
         Result result = this.controller.user();
         User user = (User) result.getRenderable();
 
@@ -68,13 +70,13 @@ public class ApplicationControllerTest {
     }
 
     @Test
-    public void testGetParent() {
-        Result result = this.controller.parent("parent");
-        User user = (User) result.getRenderable();
+    public void testRetrieveParent() {
+        Result result = this.controller.retrieveParent("parent");
+        User parent = (User) result.getRenderable();
 
         assertEquals("application/json", result.getContentType());;
         assertEquals(200, result.getStatusCode());
-        assertEquals("parent", user.parent.username);
+        assertEquals("parent", parent.username);
     }
 
     @Test

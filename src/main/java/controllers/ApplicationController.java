@@ -24,6 +24,8 @@ import ninja.Results;
 import ninja.params.PathParam;
 import services.UserFactory;
 
+import java.util.HashMap;
+
 
 @Singleton
 public class ApplicationController {
@@ -35,7 +37,10 @@ public class ApplicationController {
     }
 
     public Result index() {
-        return Results.json().render("");
+        HashMap<String, String> response = new HashMap<String, String>();
+        response.put("title", "Welcome!");
+
+        return Results.json().render(response);
     }
 
     public Result user() {
@@ -53,13 +58,15 @@ public class ApplicationController {
         return Results.json().render(user);
     }
 
-    public Result parent(@PathParam("parent-name") String parentName) {
+    public Result retrieveParent(@PathParam("parent-name") String parentName) {
         User user = this.userFactory.createUser();
         User parent = this.userFactory.createUser();
         parent.username = parentName;
         user.giveParent(parent);
 
-        return Results.json().render(user);
+        return Results.json().render(parent);
     }
+
+
 
 }

@@ -25,13 +25,14 @@ public class Routes implements ApplicationRoutes {
 
     @Override
     public void init(Router router) {  
-        
+
         router.GET().route("/").with(ApplicationController.class, "index");
 
         router.GET().route("/user").with(ApplicationController.class, "user");
-        router.GET().route("/user/{parent-name}").with(ApplicationController.class, "parent");
-
         router.POST().route("/user").with(ApplicationController.class, "createUser");
+
+        router.GET().route("/user/{parent-name}").with(ApplicationController.class, "retrieveParent");
+
 
     }
 
