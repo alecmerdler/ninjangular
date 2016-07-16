@@ -16,10 +16,9 @@ import static org.junit.Assert.fail;
 /**
  * Created by alec.merdler on 7/12/16.
  */
-public class UserIntegrationTest extends NinjaTest {
+public class IntegrationTest extends NinjaTest {
     String serverAddress;
     String agbizAddress;
-    String jiveAddress;
     ObjectMapper objectMapper;
 
     @Before
@@ -27,7 +26,6 @@ public class UserIntegrationTest extends NinjaTest {
         objectMapper = new ObjectMapper();
         serverAddress = getServerAddress();
         agbizAddress = "http://agbizdev.cosine.oregonstate.edu";
-        jiveAddress = "https://brewspace.jiveland.com/__services/v2/rest/activity-stream/fullreplies/102/292548";
     }
 
     @Test
@@ -71,7 +69,8 @@ public class UserIntegrationTest extends NinjaTest {
 
     @Test
     public void testBudgetGET() {
-        String result = ninjaTestBrowser.makeRequest(serverAddress + "/budget");
+        int id = 1;
+        String result = ninjaTestBrowser.makeRequest(serverAddress + "/budget/" + id);
         try {
             Budget budget = objectMapper.readValue(result, Budget.class);
             assertEquals(1, budget.id);
@@ -79,6 +78,15 @@ public class UserIntegrationTest extends NinjaTest {
         catch (Exception e) {
             fail(e.getMessage());
         }
+    }
+
+    @Test
+    public void testBudgetGETInvalid() {
+        int id = -1;
+        String result = ninjaTestBrowser.makeJsonRequest(serverAddress + "/budget/" + id);
+
+        // Strip quotes from result string
+        assertEquals(id + " is less than 1", result.replaceAll("^\"|\"$", ""));
     }
 
 }

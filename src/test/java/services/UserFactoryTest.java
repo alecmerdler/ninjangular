@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
  * Created by alec.merdler on 7/8/16.
  */
 public class UserFactoryTest {
-    UserFactory userFactory;
+    UserFactoryImpl userFactory;
     String firstName;
     String lastname;
     String username;
@@ -18,7 +18,7 @@ public class UserFactoryTest {
 
     @Before
     public void beforeEach() {
-        this.userFactory = new UserFactory();
+        this.userFactory = new UserFactoryImpl();
     }
 
     @Test

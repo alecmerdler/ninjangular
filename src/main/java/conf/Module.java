@@ -18,15 +18,20 @@ package conf;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
+import services.BudgetService;
+import services.BudgetServiceImpl;
+import services.UserFactory;
+import services.UserFactoryImpl;
 
 @Singleton
 public class Module extends AbstractModule {
-    
+
 
     protected void configure() {
-        
-        // bind your injections here!
-        
+
+        bind(UserFactory.class).to(UserFactoryImpl.class);
+        bind(BudgetService.class).to(BudgetServiceImpl.class);
+
     }
 
 }

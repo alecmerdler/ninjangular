@@ -31,7 +31,7 @@ public class Routes implements ApplicationRoutes {
         router.GET().route("/user").with(ApplicationController.class, "user");
         router.POST().route("/user").with(ApplicationController.class, "createUser");
 
-        router.GET().route("^/budget").with(ApplicationController.class, "retrieveBudget");
+        router.GET().route("^/budget/{id}").with(ApplicationController.class, "retrieveBudget");
 
 
     }

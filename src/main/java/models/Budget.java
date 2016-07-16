@@ -10,7 +10,7 @@ import java.util.HashMap;
  */
 public class Budget extends Model {
     User user;
-
+    public int id;
     public String title;
     public String notes;
     public String enterprise;
@@ -76,27 +76,30 @@ public class Budget extends Model {
 
     private Budget() {}
 
-    Budget(User user,
-           String title,
-           String notes,
-           String enterprise,
-           String descriptor1,
-           String descriptor2,
-           String descriptor3,
-           String descriptor4,
-           String descriptor5,
-           String descriptor6,
-           String market,
+    public Budget(
+            User user,
+            int id,
+            String title,
+            String notes,
+            String enterprise,
+            String descriptor1,
+            String descriptor2,
+            String descriptor3,
+            String descriptor4,
+            String descriptor5,
+            String descriptor6,
+            String market,
 
-           String state,
-           String region,
+            String state,
+            String region,
 
-           String timeUnit,
-           int timeValue,
-           String farmUnit,
-           int farmUnitQuantity
-           ) {
+            String timeUnit,
+            int timeValue,
+            String farmUnit,
+            int farmUnitQuantity
+    ) {
         this.user = user;
+        this.id = id;
         this.title = title;
         this.notes = notes;
         this.enterprise = enterprise;

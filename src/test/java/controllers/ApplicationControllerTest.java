@@ -16,34 +16,42 @@
 
 package controllers;
 
-
+import mocks.services.BudgetServiceMock;
+import mocks.services.UserFactoryMock;
 import models.Budget;
 import models.User;
 import ninja.Result;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import services.BudgetService;
 import services.UserFactory;
 
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
 public class ApplicationControllerTest {
     ApplicationController controller;
 
-    @Mock
     UserFactory userFactoryMock;
+    BudgetService budgetServiceMock;
+
+    UserFactory userFactorySpy;
+    BudgetService budgetServiceSpy;
 
     @Before
     public void beforeEach() {
-        controller = new ApplicationController(userFactoryMock);
+        userFactoryMock =  new UserFactoryMock();
+        budgetServiceMock = new BudgetServiceMock();
 
-        when(userFactoryMock.createDefaultUser()).thenReturn(new User("John", "Cleese", "johncleese", "password"));
+        userFactorySpy = spy(userFactoryMock);
+        budgetServiceSpy = spy(budgetServiceMock);
+
+        controller = new ApplicationController(userFactorySpy, budgetServiceSpy);
     }
 
     @Test
@@ -60,7 +68,7 @@ public class ApplicationControllerTest {
         Result result = this.controller.user();
         User user = (User) result.getRenderable();
 
-        verify(userFactoryMock, times(1)).createDefaultUser();
+        verify(userFactorySpy, times(1)).createDefaultUser();
         assertEquals(result.getContentType(), "application/json");
         assertEquals(200, result.getStatusCode());
         assertEquals("johncleese", user.username);
@@ -80,11 +88,27 @@ public class ApplicationControllerTest {
 
     @Test
     public void testRetrieveBudget() {
-        Result result = this.controller.retrieveBudget();
+        int id = 1;
+        Result result = this.controller.retrieveBudget(id);
         Budget budget = (Budget) result.getRenderable();
 
         assertEquals(200, result.getStatusCode());
         assertEquals(1, budget.id);
+        try {
+            verify(budgetServiceSpy).retrieveBudget(id);
+        }
+        catch (Exception e) {
+            fail("Should not throw exception");
+        }
+    }
+
+    @Test
+    public void testRetrieveBudgetInvalid() {
+        int id = -1;
+        Result result = this.controller.retrieveBudget(id);
+
+        assertEquals(400, result.getStatusCode());
+        assertEquals(id + " is less than 1", result.getRenderable());
     }
 
 }

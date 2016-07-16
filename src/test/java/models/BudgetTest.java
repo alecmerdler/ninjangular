@@ -11,6 +11,7 @@ import static org.junit.Assert.assertThat;
  * Created by alec.merdler on 7/15/16.
  */
 public class BudgetTest {
+    int id;
     String title;
     String notes;
     String enterprise;
@@ -33,6 +34,7 @@ public class BudgetTest {
 
     @Before
     public void beforeEach() {
+        this.id = 1;
         this.title = "My Budget";
         this.notes = "My notes here";
         this.enterprise = "";
@@ -58,6 +60,7 @@ public class BudgetTest {
         User user = new User("John", "Cleese", "johncleese", "password");
         Budget budget = new Budget(
                 user,
+                id,
                 title,
                 notes,
                 enterprise,
@@ -77,6 +80,7 @@ public class BudgetTest {
             );
 
         assertEquals(user, budget.user);
+        assertEquals(id, budget.id);
         assertEquals(title, budget.title);
         assertEquals(notes, budget.notes);
         assertEquals(descriptor1, budget.descriptor1);
