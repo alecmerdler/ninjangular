@@ -1,87 +1,55 @@
 package services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import models.Budget;
-import models.User;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by alec on 7/16/16.
  */
 public class BudgetServiceImpl implements BudgetService {
-    User user;
-    int id;
-    String title;
-    String notes;
-    String enterprise;
-    String descriptor1;
-    String descriptor2;
-    String descriptor3;
-    String descriptor4;
-    String descriptor5;
-    String descriptor6;
-    String market ;
+    private UserFactory userFactory;
+    private CloseableHttpClient closeableHttpClient;
+    private String agbizAddress;
+    private ObjectMapper objectMapper;
 
-    String state;
-    String region;
-
-    String timeUnit;
-    int timeValue;
-    String farmUnit;
-    int farmUnitQuantity;
-
-    UserFactoryImpl userFactory;
-
-    public BudgetServiceImpl() {
-        this.userFactory = new UserFactoryImpl();
-
-        this.user = this.setUser();
-        this.id = 1;
-        this.title = "My Budget";
-        this.notes = "My notes here";
-        this.enterprise = "";
-        this.descriptor1 = "";
-        this.descriptor2 = "";
-        this.descriptor3 = "";
-        this.descriptor4 = "";
-        this.descriptor5 = "";
-        this.descriptor6 = "";
-        this.market = "GMO";
-
-        this.state = "OR";
-        this.region = "Beaverton";
-
-        this.timeUnit = "years";
-        this.timeValue = 2;
-        this.farmUnit = "acres";
-        this.farmUnitQuantity = 20;
+    public BudgetServiceImpl(UserFactory userFactory, CloseableHttpClient closeableHttpClient) {
+        this.closeableHttpClient = closeableHttpClient;
+        this.userFactory = userFactory;
+        this.objectMapper = new ObjectMapper();
+        this.agbizAddress = "http://agbizdev.cosine.oregonstate.edu";
     }
 
     public Budget retrieveBudget(int id) throws Exception {
         if (id < 1) {
             throw new Exception(id + " is less than 1");
         }
-        return new Budget(
-                user,
-                id,
-                title,
-                notes,
-                enterprise,
-                descriptor1,
-                descriptor2,
-                descriptor3,
-                descriptor4,
-                descriptor5,
-                descriptor6,
-                market,
-                state,
-                region,
-                timeUnit,
-                timeValue,
-                farmUnit,
-                farmUnitQuantity
-        );
+        try {
+            CloseableHttpResponse response = executeRetrieve(id);
+            return parseResponse(response);
+        }
+        catch (Exception e) {
+            throw e;
+        }
     }
 
-    private User setUser() {
-        return this.userFactory.createDefaultUser();
+    private CloseableHttpResponse executeRetrieve(int id) throws Exception {
+        HttpGet httpGet = new HttpGet(agbizAddress + "/budget/api/budgets/" + id + "/");
+        return closeableHttpClient.execute(httpGet);
+    }
+
+    private Budget parseResponse(CloseableHttpResponse response) throws IOException {
+        HttpEntity entity = response.getEntity();
+        InputStream stream = entity.getContent();
+        Budget budget = objectMapper.readValue(stream, Budget.class);
+        response.close();
+
+        return budget;
     }
 }

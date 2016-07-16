@@ -1,13 +1,14 @@
 package services;
 
 import models.Budget;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 
 /**
@@ -16,10 +17,16 @@ import static org.junit.Assert.fail;
 public class BudgetServiceImplTest {
     BudgetService budgetService;
 
+    UserFactory userFactoryMock;
+    CloseableHttpClient closeableHttpClientMock;
+
     @Before
     public void beforeEach() {
-        budgetService = new BudgetServiceImpl();
-
+        userFactoryMock = mock(UserFactory.class);
+        // FIXME: setup mocking
+//        closeableHttpClientMock = mock(CloseableHttpClient.class);
+        closeableHttpClientMock = HttpClients.createDefault();
+        budgetService = new BudgetServiceImpl(userFactoryMock, closeableHttpClientMock);
     }
 
     @Test
@@ -33,9 +40,10 @@ public class BudgetServiceImplTest {
         try {
             Budget budget = budgetService.retrieveBudget(id);
             assertEquals(id, budget.id);
+//            verify(closeableHttpClientMock.execute(any(HttpGet.class)));
         }
         catch (Exception e) {
-            fail("Should not throw exception");
+            fail("Should not throw exception: " + e.getMessage());
         }
     }
 
@@ -43,7 +51,7 @@ public class BudgetServiceImplTest {
     public void testRetrieveBudgetInvalidId() {
         int id = -1;
         try {
-            Budget budget = budgetService.retrieveBudget(id);
+            budgetService.retrieveBudget(id);
             fail("Should have thrown exception");
         }
         catch (Exception e) {

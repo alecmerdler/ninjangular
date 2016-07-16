@@ -16,7 +16,6 @@
 
 package controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import models.Budget;
@@ -24,11 +23,7 @@ import models.User;
 import ninja.Result;
 import ninja.Results;
 import ninja.params.PathParam;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import providers.BudgetServiceProvider;
 import services.BudgetService;
 import services.UserFactory;
 
@@ -39,13 +34,11 @@ import java.util.HashMap;
 public class ApplicationController {
     private UserFactory userFactory;
     private BudgetService budgetService;
-    private String agbizAddress = "http://agbizdev.cosine.oregonstate.edu";
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Inject
-    public ApplicationController(UserFactory userFactory, BudgetService budgetService) {
+    public ApplicationController(UserFactory userFactory, BudgetServiceProvider budgetServiceProvider) {
         this.userFactory = userFactory;
-        this.budgetService = budgetService;
+        this.budgetService = budgetServiceProvider.createBudgetService();
     }
 
     public Result index() {
@@ -65,22 +58,6 @@ public class ApplicationController {
         User user = this.userFactory.createDefaultUser();
 
         return Results.json().render(user);
-    }
-
-    private Result retrieveBudget() {
-        try {
-            CloseableHttpClient httpClient = HttpClients.createDefault();
-            HttpGet httpGet = new HttpGet(agbizAddress + "/budget/api/budgets/1/");
-            CloseableHttpResponse response = httpClient.execute(httpGet);
-            HttpEntity entity = response.getEntity();
-            response.close();
-            Budget budget = objectMapper.readValue(entity.getContent(), Budget.class);
-
-            return Results.json().render(budget);
-        }
-        catch (Exception e) {
-            return Results.json().render(e.getMessage());
-        }
     }
 
     public Result retrieveBudget(@PathParam("id") int id) {

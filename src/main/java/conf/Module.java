@@ -18,8 +18,8 @@ package conf;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
-import services.BudgetService;
-import services.BudgetServiceImpl;
+import providers.BudgetServiceProvider;
+import providers.BudgetServiceProviderImpl;
 import services.UserFactory;
 import services.UserFactoryImpl;
 
@@ -28,10 +28,8 @@ public class Module extends AbstractModule {
 
 
     protected void configure() {
-
         bind(UserFactory.class).to(UserFactoryImpl.class);
-        bind(BudgetService.class).to(BudgetServiceImpl.class);
-
+        bind(BudgetServiceProvider.class).to(BudgetServiceProviderImpl.class);
     }
 
 }

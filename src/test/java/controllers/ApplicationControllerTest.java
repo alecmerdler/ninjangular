@@ -23,6 +23,8 @@ import models.User;
 import ninja.Result;
 import org.junit.Before;
 import org.junit.Test;
+import providers.BudgetServiceProvider;
+import providers.BudgetServiceProviderImpl;
 import services.BudgetService;
 import services.UserFactory;
 
@@ -30,9 +32,7 @@ import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class ApplicationControllerTest {
     ApplicationController controller;
@@ -43,15 +43,19 @@ public class ApplicationControllerTest {
     UserFactory userFactorySpy;
     BudgetService budgetServiceSpy;
 
+    BudgetServiceProvider budgetServiceProviderMock;
+
     @Before
     public void beforeEach() {
         userFactoryMock =  new UserFactoryMock();
         budgetServiceMock = new BudgetServiceMock();
-
         userFactorySpy = spy(userFactoryMock);
         budgetServiceSpy = spy(budgetServiceMock);
+        budgetServiceProviderMock = mock(BudgetServiceProviderImpl.class);
 
-        controller = new ApplicationController(userFactorySpy, budgetServiceSpy);
+        when(budgetServiceProviderMock.createBudgetService()).thenReturn(budgetServiceSpy);
+
+        controller = new ApplicationController(userFactorySpy, budgetServiceProviderMock);
     }
 
     @Test
