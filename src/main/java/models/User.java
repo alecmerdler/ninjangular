@@ -3,7 +3,7 @@ package models;
 /**
  * Created by alec.merdler on 7/7/16.
  */
-public class User {
+public class User extends Model {
     public String firstName;
     public String lastName;
     public String username;

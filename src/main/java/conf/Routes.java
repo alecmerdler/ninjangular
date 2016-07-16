@@ -33,6 +33,8 @@ public class Routes implements ApplicationRoutes {
 
         router.GET().route("/user/{parent-name}").with(ApplicationController.class, "retrieveParent");
 
+        router.GET().route("/budget").with(ApplicationController.class, "retrieveBudget");
+
 
     }
 

@@ -1,7 +1,10 @@
 package models;
 
 import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by alec.merdler on 7/7/16.
@@ -16,6 +19,7 @@ public class UserTest {
         assertEquals("Cleese", user.lastName);
         assertEquals("johncleese", user.username);
         assertEquals("password", user.password);
+        assertThat(user, instanceOf(Model.class));
     }
 
     @Test

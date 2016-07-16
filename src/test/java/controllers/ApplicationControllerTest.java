@@ -17,6 +17,7 @@
 package controllers;
 
 
+import models.Budget;
 import models.User;
 import ninja.Result;
 import org.junit.Before;
@@ -89,6 +90,15 @@ public class ApplicationControllerTest {
 
         assertEquals(200, result.getStatusCode());
         assertEquals(requestUser.username, user.username);
+    }
+
+    @Test
+    public void testRetrieveBudget() {
+        Result result = this.controller.retrieveBudget();
+        Budget budget = (Budget) result.getRenderable();
+
+        assertEquals(200, result.getStatusCode());
+        assertEquals(1, budget.id);
     }
 
 }

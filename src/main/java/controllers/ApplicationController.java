@@ -16,12 +16,19 @@
 
 package controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import models.Budget;
 import models.User;
 import ninja.Result;
 import ninja.Results;
 import ninja.params.PathParam;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import services.UserFactory;
 
 import java.util.HashMap;
@@ -29,7 +36,10 @@ import java.util.HashMap;
 
 @Singleton
 public class ApplicationController {
+
     private UserFactory userFactory;
+    private String agbizAddress = "http://agbizdev.cosine.oregonstate.edu";
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Inject
     public ApplicationController(UserFactory userFactory) {
@@ -67,6 +77,19 @@ public class ApplicationController {
         return Results.json().render(parent);
     }
 
+    public Result retrieveBudget() {
+        try {
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            HttpGet httpGet = new HttpGet(agbizAddress + "/budget/api/budgets/1/");
+            CloseableHttpResponse response = httpClient.execute(httpGet);
+            HttpEntity entity = response.getEntity();
+            Budget budget = objectMapper.readValue(entity.getContent(), Budget.class);
 
+            return Results.json().render(budget);
+        }
+        catch (Exception e) {
+            return Results.json().render(e.getMessage());
+        }
+    }
 
 }
