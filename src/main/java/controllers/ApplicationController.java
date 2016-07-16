@@ -23,7 +23,6 @@ import models.Budget;
 import models.User;
 import ninja.Result;
 import ninja.Results;
-import ninja.params.PathParam;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -54,27 +53,15 @@ public class ApplicationController {
     }
 
     public Result user() {
-        User user = this.userFactory.createUser();
-        User parent = this.userFactory.createUser();
-        user.giveParent(parent);
+        User user = this.userFactory.createDefaultUser();
 
         return Results.json().render(user);
     }
 
-    public Result createUser(User requestUser) {
-        User user = this.userFactory.createUser();
-        user.username = requestUser.username;
+    public Result createUser() {
+        User user = this.userFactory.createDefaultUser();
 
         return Results.json().render(user);
-    }
-
-    public Result retrieveParent(@PathParam("parent-name") String parentName) {
-        User user = this.userFactory.createUser();
-        User parent = this.userFactory.createUser();
-        parent.username = parentName;
-        user.giveParent(parent);
-
-        return Results.json().render(parent);
     }
 
     public Result retrieveBudget() {

@@ -51,19 +51,6 @@ public class UserIntegrationTest extends NinjaTest {
             assertEquals("John", user.firstName);
             assertEquals("Cleese", user.lastName);
             assertEquals("password", user.password);
-            assertEquals("johncleese", user.parent.username);
-        }
-        catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-
-    @Test
-    public void testUserParentGET() {
-        String result = ninjaTestBrowser.makeRequest(serverAddress + "/user/parent");
-        try {
-            User parent = objectMapper.readValue(result, User.class);
-            assertEquals("parent", parent.username);
         }
         catch (Exception e) {
             fail(e.getMessage());
@@ -72,12 +59,10 @@ public class UserIntegrationTest extends NinjaTest {
 
     @Test
     public void testUserPOST() {
-        HashMap<String, String> userMap = new HashMap<>();
-        userMap.put("username", "bob");
-        String result = ninjaTestBrowser.postJson(serverAddress + "/user", userMap);
+        String result = ninjaTestBrowser.makeRequest(serverAddress + "/user");
         try {
             User resultParent = objectMapper.readValue(result, User.class);
-            assertEquals("bob", resultParent.username);
+            assertEquals("johncleese", resultParent.username);
         }
         catch (Exception e) {
             fail(e.getMessage());

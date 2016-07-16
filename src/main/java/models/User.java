@@ -11,14 +11,14 @@ public class User extends Model {
     public User parent;
 
     private int maxPasswordLength = 20;
-    private String catchphrase;
 
-    public User() {
-        this.firstName = "John";
-        this.lastName = "Cleese";
-        this.username = "johncleese";
-        this.password = "password";
-        this.catchphrase = "yo";
+    private User() {}
+
+    public User(String firstName, String lastName, String username, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
     }
 
     public void changePassword(String newPassword) {
@@ -27,11 +27,5 @@ public class User extends Model {
         }
     }
 
-    public String sayCatchphrase() {
-        return this.catchphrase;
-    }
 
-    public void giveParent(User parent) {
-        this.parent =  parent;
-    }
 }

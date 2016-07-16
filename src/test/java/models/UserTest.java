@@ -1,5 +1,6 @@
 package models;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -10,10 +11,22 @@ import static org.junit.Assert.assertThat;
  * Created by alec.merdler on 7/7/16.
  */
 public class UserTest {
+    String firstName;
+    String lastname;
+    String username;
+    String password;
+
+    @Before
+    public void beforeEach() {
+        firstName = "John";
+        lastname = "Cleese";
+        username = "johncleese";
+        password = "password";
+    }
 
     @Test
-    public void testCreateNewUser() {
-        User user = new User();
+    public void testCreateUser() {
+        User user = new User(firstName, lastname, username, password);
 
         assertEquals("John", user.firstName);
         assertEquals("Cleese", user.lastName);
@@ -24,7 +37,7 @@ public class UserTest {
 
     @Test
     public void testChangePasswordValidLength() {
-        User user = new User();
+        User user = new User(firstName, lastname, username, password);
 
         user.changePassword("wubadubdub");
 
@@ -33,7 +46,7 @@ public class UserTest {
 
     @Test
     public void testChangePasswordInvalidLength() {
-        User user = new User();
+        User user = new User(firstName, lastname, username, password);
         String originalPassword = user.password;
 
         user.changePassword("thisIsAReallyLongPasswordThatDefinitelyExceedsTheLengthRequirements");
@@ -41,22 +54,5 @@ public class UserTest {
         assertEquals(originalPassword, user.password);
     }
 
-    @Test
-    public void testSayCatchphrase() {
-        User user = new User();
 
-        String catchphrase = user.sayCatchphrase();
-
-        assertEquals("yo", catchphrase);
-    }
-
-    @Test
-    public void testGiveParent() {
-        User user = new User();
-        User parent = new User();
-
-        user.giveParent(parent);
-
-        assertEquals(parent, user.parent);
-    }
 }

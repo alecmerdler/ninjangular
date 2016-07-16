@@ -24,16 +24,14 @@ import ninja.application.ApplicationRoutes;
 public class Routes implements ApplicationRoutes {
 
     @Override
-    public void init(Router router) {  
+    public void init(Router router) {
 
         router.GET().route("/").with(ApplicationController.class, "index");
 
         router.GET().route("/user").with(ApplicationController.class, "user");
         router.POST().route("/user").with(ApplicationController.class, "createUser");
 
-        router.GET().route("/user/{parent-name}").with(ApplicationController.class, "retrieveParent");
-
-        router.GET().route("/budget").with(ApplicationController.class, "retrieveBudget");
+        router.GET().route("^/budget").with(ApplicationController.class, "retrieveBudget");
 
 
     }

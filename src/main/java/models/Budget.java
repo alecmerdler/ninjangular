@@ -74,7 +74,7 @@ public class Budget extends Model {
     public HashMap<String, String>[] incomeItems;
 
 
-    Budget() {}
+    private Budget() {}
 
     Budget(User user,
            String title,

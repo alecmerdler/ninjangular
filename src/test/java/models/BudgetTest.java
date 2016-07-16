@@ -55,7 +55,7 @@ public class BudgetTest {
 
     @Test
     public void testCreateNewBudget() {
-        User user = new User();
+        User user = new User("John", "Cleese", "johncleese", "password");
         Budget budget = new Budget(
                 user,
                 title,

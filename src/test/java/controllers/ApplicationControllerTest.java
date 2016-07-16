@@ -43,7 +43,7 @@ public class ApplicationControllerTest {
     public void beforeEach() {
         controller = new ApplicationController(userFactoryMock);
 
-        when(userFactoryMock.createUser()).thenReturn(new User());
+        when(userFactoryMock.createDefaultUser()).thenReturn(new User("John", "Cleese", "johncleese", "password"));
     }
 
     @Test
@@ -60,36 +60,22 @@ public class ApplicationControllerTest {
         Result result = this.controller.user();
         User user = (User) result.getRenderable();
 
-        verify(userFactoryMock, times(2)).createUser();
+        verify(userFactoryMock, times(1)).createDefaultUser();
         assertEquals(result.getContentType(), "application/json");
         assertEquals(200, result.getStatusCode());
         assertEquals("johncleese", user.username);
         assertEquals("John", user.firstName);
         assertEquals("Cleese", user.lastName);
         assertEquals("password", user.password);
-        assertEquals("johncleese", user.parent.username);
-    }
-
-    @Test
-    public void testRetrieveParent() {
-        Result result = this.controller.retrieveParent("parent");
-        User parent = (User) result.getRenderable();
-
-        assertEquals("application/json", result.getContentType());;
-        assertEquals(200, result.getStatusCode());
-        assertEquals("parent", parent.username);
     }
 
     @Test
     public void testCreateUser() {
-        User requestUser = new User();
-        requestUser.username = "bob";
-
-        Result result = this.controller.createUser(requestUser);
+        Result result = this.controller.createUser();
         User user = (User) result.getRenderable();
 
         assertEquals(200, result.getStatusCode());
-        assertEquals(requestUser.username, user.username);
+        assertEquals("johncleese", user.username);
     }
 
     @Test
