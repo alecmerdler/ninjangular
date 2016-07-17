@@ -10,6 +10,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 /**
  * Created by alec on 7/16/16.
@@ -38,6 +39,24 @@ public class BudgetServiceImpl implements BudgetService {
         catch (Exception e) {
             throw e;
         }
+    }
+
+    public Budget combine(int[] ids) throws Exception {
+        if (ids.length < 2) {
+            throw new Exception("Need to be supplied with 2 or more id's");
+        }
+        ArrayList<Budget> budgetsToCombine = new ArrayList<>();
+
+        for (int i = 0; i < ids.length; i++) {
+            try {
+                CloseableHttpResponse response = executeRetrieve(ids[i]);
+                budgetsToCombine.add(parseResponse(response));
+            }
+            catch (Exception e) {
+                throw e;
+            }
+        }
+        return budgetsToCombine.get(0);
     }
 
     private CloseableHttpResponse executeRetrieve(int id) throws IOException {

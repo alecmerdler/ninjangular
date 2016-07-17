@@ -71,4 +71,16 @@ public class BudgetServiceImplTest {
         }
     }
 
+    @Test
+    public void testCombineBudgetsSingle() {
+        int ids[] = {1};
+        try {
+            budgetService.combine(ids);
+            fail("Should have thrown exception when supplied array with less than 2 id's");
+        }
+        catch (Exception e) {
+            assertEquals("Need to be supplied with 2 or more id's", e.getMessage());
+        }
+    }
+
 }

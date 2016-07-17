@@ -10,7 +10,6 @@ import services.UserFactoryImpl;
  */
 public class BudgetServiceMock implements BudgetService {
     User user;
-    int id;
     String title;
     String notes;
     String enterprise;
@@ -36,7 +35,6 @@ public class BudgetServiceMock implements BudgetService {
         this.userFactory = new UserFactoryImpl();
 
         this.user = this.setUser();
-        this.id = 1;
         this.title = "My Budget";
         this.notes = "My notes here";
         this.enterprise = "";
@@ -64,6 +62,32 @@ public class BudgetServiceMock implements BudgetService {
         return new Budget(
                 this.user,
                 id,
+                this.title,
+                this.notes,
+                this.enterprise,
+                this.descriptor1,
+                this.descriptor2,
+                this.descriptor3,
+                this.descriptor4,
+                this.descriptor5,
+                this.descriptor6,
+                this.market,
+                this.state,
+                this.region,
+                this.timeUnit,
+                this.timeValue,
+                this.farmUnit,
+                this.farmUnitQuantity
+        );
+    }
+
+    public Budget combine(int[] ids) throws Exception {
+        if (ids.length < 2) {
+            throw new Exception("Need to be supplied with 2 or more id's");
+        }
+        return new Budget(
+                this.user,
+                ids[0],
                 this.title,
                 this.notes,
                 this.enterprise,

@@ -7,4 +7,5 @@ import models.Budget;
  */
 public interface BudgetService {
     Budget retrieveBudget(int id) throws Exception;
+    Budget combine(int[] ids) throws Exception;
 }
