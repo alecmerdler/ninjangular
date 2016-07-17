@@ -68,7 +68,7 @@ public class ApplicationController {
             return Results.json().render(budget);
         }
         catch (Exception e) {
-            return Results.badRequest().render(e.getMessage());
+            return Results.badRequest().json().render(e.getMessage());
         }
     }
 

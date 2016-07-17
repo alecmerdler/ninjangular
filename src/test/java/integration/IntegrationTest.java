@@ -7,7 +7,6 @@ import ninja.NinjaTest;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -73,7 +72,7 @@ public class IntegrationTest extends NinjaTest {
     @Test
     public void testBudgetGETValid() {
         int id = 1;
-        String result = ninjaTestBrowser.makeRequest(budgetsResource + "/" + id);
+        String result = ninjaTestBrowser.makeJsonRequest(budgetsResource + "/" + id);
         try {
             Budget budget = objectMapper.readValue(result, Budget.class);
             assertEquals(1, budget.id);
@@ -87,19 +86,13 @@ public class IntegrationTest extends NinjaTest {
     public void testBudgetGETNegativeID() {
         int id = -1;
         String result = ninjaTestBrowser.makeJsonRequest(budgetsResource + "/" + id);
-        try {
-            HashMap<String, String> resultMap = objectMapper.readValue(result, HashMap.class);
-            assertEquals("Oops. The requested route cannot be found.", resultMap.get("text"));
-        }
-        catch (IOException e) {
-            fail("Should not throw exception");
-        }
+        assertEquals(id + " is less than 1", result.replaceAll("^\"|\"$", ""));
     }
 
     @Test
     public void testBudgetGETNonexistentID() {
         int id = 20000;
-        String result = ninjaTestBrowser.makeJsonRequest(budgetsResource + "/" + id);
+        String result = ninjaTestBrowser.makeRequest(budgetsResource + "/" + id);
 
         // Strip quotes from result string
         assertEquals("Budget with id could not be found", result.replaceAll("^\"|\"$", ""));
