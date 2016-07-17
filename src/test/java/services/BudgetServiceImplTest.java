@@ -48,7 +48,7 @@ public class BudgetServiceImplTest {
     }
 
     @Test
-    public void testRetrieveBudgetInvalidId() {
+    public void testRetrieveBudgetNegativeID() {
         int id = -1;
         try {
             budgetService.retrieveBudget(id);
@@ -56,6 +56,18 @@ public class BudgetServiceImplTest {
         }
         catch (Exception e) {
             assertEquals(id + " is less than 1", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testRetrieveBudgetNonexistentID() {
+        int id = 200000;
+        try {
+            budgetService.retrieveBudget(id);
+            fail("Should have thrown exception");
+        }
+        catch (Exception e) {
+            assertEquals("Budget with id could not be found", e.getMessage());
         }
     }
 

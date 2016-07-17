@@ -25,6 +25,8 @@ import org.junit.Before;
 import org.junit.Test;
 import providers.BudgetServiceProvider;
 import providers.BudgetServiceProviderImpl;
+import providers.UserFactoryProvider;
+import providers.UserFactoryProviderImpl;
 import services.BudgetService;
 import services.UserFactory;
 
@@ -43,6 +45,7 @@ public class ApplicationControllerTest {
     UserFactory userFactorySpy;
     BudgetService budgetServiceSpy;
 
+    UserFactoryProvider userFactoryProviderMock;
     BudgetServiceProvider budgetServiceProviderMock;
 
     @Before
@@ -52,10 +55,12 @@ public class ApplicationControllerTest {
         userFactorySpy = spy(userFactoryMock);
         budgetServiceSpy = spy(budgetServiceMock);
         budgetServiceProviderMock = mock(BudgetServiceProviderImpl.class);
+        userFactoryProviderMock = mock(UserFactoryProviderImpl.class);
 
+        when(userFactoryProviderMock.createUserFactory()).thenReturn(userFactorySpy);
         when(budgetServiceProviderMock.createBudgetService()).thenReturn(budgetServiceSpy);
 
-        controller = new ApplicationController(userFactorySpy, budgetServiceProviderMock);
+        controller = new ApplicationController(userFactoryProviderMock, budgetServiceProviderMock);
     }
 
     @Test

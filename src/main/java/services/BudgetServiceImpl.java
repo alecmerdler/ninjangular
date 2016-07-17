@@ -1,6 +1,7 @@
 package services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import models.Budget;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -39,7 +40,7 @@ public class BudgetServiceImpl implements BudgetService {
         }
     }
 
-    private CloseableHttpResponse executeRetrieve(int id) throws Exception {
+    private CloseableHttpResponse executeRetrieve(int id) throws IOException {
         HttpGet httpGet = new HttpGet(agbizAddress + "/budget/api/budgets/" + id + "/");
         return closeableHttpClient.execute(httpGet);
     }
@@ -47,9 +48,15 @@ public class BudgetServiceImpl implements BudgetService {
     private Budget parseResponse(CloseableHttpResponse response) throws IOException {
         HttpEntity entity = response.getEntity();
         InputStream stream = entity.getContent();
-        Budget budget = objectMapper.readValue(stream, Budget.class);
-        response.close();
-
-        return budget;
+        try {
+            Budget budget = objectMapper.readValue(stream, Budget.class);
+            return budget;
+        }
+        catch (UnrecognizedPropertyException e) {
+            throw new IOException("Budget with id could not be found");
+        }
+        finally {
+            response.close();
+        }
     }
 }

@@ -7,6 +7,7 @@ import ninja.NinjaTest;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -19,13 +20,15 @@ import static org.junit.Assert.fail;
 public class IntegrationTest extends NinjaTest {
     String serverAddress;
     String agbizAddress;
+    String budgetsResource;
     ObjectMapper objectMapper;
 
     @Before
     public void beforeEach() {
         objectMapper = new ObjectMapper();
         serverAddress = getServerAddress();
-        agbizAddress = "http://agbizdev.cosine.oregonstate.edu";
+        budgetsResource = serverAddress + "/budgets";
+
     }
 
     @Test
@@ -68,9 +71,9 @@ public class IntegrationTest extends NinjaTest {
     }
 
     @Test
-    public void testBudgetGET() {
+    public void testBudgetGETValid() {
         int id = 1;
-        String result = ninjaTestBrowser.makeRequest(serverAddress + "/budget/" + id);
+        String result = ninjaTestBrowser.makeRequest(budgetsResource + "/" + id);
         try {
             Budget budget = objectMapper.readValue(result, Budget.class);
             assertEquals(1, budget.id);
@@ -81,12 +84,25 @@ public class IntegrationTest extends NinjaTest {
     }
 
     @Test
-    public void testBudgetGETInvalid() {
+    public void testBudgetGETNegativeID() {
         int id = -1;
-        String result = ninjaTestBrowser.makeJsonRequest(serverAddress + "/budget/" + id);
+        String result = ninjaTestBrowser.makeJsonRequest(budgetsResource + "/" + id);
+        try {
+            HashMap<String, String> resultMap = objectMapper.readValue(result, HashMap.class);
+            assertEquals("Oops. The requested route cannot be found.", resultMap.get("text"));
+        }
+        catch (IOException e) {
+            fail("Should not throw exception");
+        }
+    }
+
+    @Test
+    public void testBudgetGETNonexistentID() {
+        int id = 20000;
+        String result = ninjaTestBrowser.makeJsonRequest(budgetsResource + "/" + id);
 
         // Strip quotes from result string
-        assertEquals(id + " is less than 1", result.replaceAll("^\"|\"$", ""));
+        assertEquals("Budget with id could not be found", result.replaceAll("^\"|\"$", ""));
     }
 
 }

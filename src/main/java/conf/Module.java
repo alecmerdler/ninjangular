@@ -20,16 +20,18 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import providers.BudgetServiceProvider;
 import providers.BudgetServiceProviderImpl;
+import providers.UserFactoryProvider;
+import providers.UserFactoryProviderImpl;
 import services.UserFactory;
 import services.UserFactoryImpl;
 
 @Singleton
 public class Module extends AbstractModule {
 
-
     protected void configure() {
         bind(UserFactory.class).to(UserFactoryImpl.class);
         bind(BudgetServiceProvider.class).to(BudgetServiceProviderImpl.class);
+        bind(UserFactoryProvider.class).to(UserFactoryProviderImpl.class);
     }
 
 }

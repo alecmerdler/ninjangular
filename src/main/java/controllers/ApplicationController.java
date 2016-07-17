@@ -24,6 +24,7 @@ import ninja.Result;
 import ninja.Results;
 import ninja.params.PathParam;
 import providers.BudgetServiceProvider;
+import providers.UserFactoryProvider;
 import services.BudgetService;
 import services.UserFactory;
 
@@ -36,8 +37,9 @@ public class ApplicationController {
     private BudgetService budgetService;
 
     @Inject
-    public ApplicationController(UserFactory userFactory, BudgetServiceProvider budgetServiceProvider) {
-        this.userFactory = userFactory;
+    public ApplicationController(UserFactoryProvider userFactoryProvider,
+                                 BudgetServiceProvider budgetServiceProvider) {
+        this.userFactory = userFactoryProvider.createUserFactory();
         this.budgetService = budgetServiceProvider.createBudgetService();
     }
 
