@@ -35,12 +35,14 @@ import java.util.HashMap;
 public class ApplicationController {
     private UserFactory userFactory;
     private BudgetService budgetService;
+    private HashMap<String, String> errorMap;
 
     @Inject
     public ApplicationController(UserFactoryProvider userFactoryProvider,
                                  BudgetServiceProvider budgetServiceProvider) {
         this.userFactory = userFactoryProvider.createUserFactory();
         this.budgetService = budgetServiceProvider.createBudgetService();
+        this.errorMap = new HashMap<>();
     }
 
     public Result index() {
@@ -65,10 +67,13 @@ public class ApplicationController {
     public Result retrieveBudget(@PathParam("id") int id) {
         try {
             Budget budget = this.budgetService.retrieveBudget(id);
+
             return Results.json().render(budget);
         }
         catch (Exception e) {
-            return Results.badRequest().json().render(e.getMessage());
+            this.errorMap.put("text", e.getMessage());
+
+            return Results.badRequest().json().render(this.errorMap);
         }
     }
 

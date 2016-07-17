@@ -115,9 +115,10 @@ public class ApplicationControllerTest {
     public void testRetrieveBudgetInvalid() {
         int id = -1;
         Result result = this.controller.retrieveBudget(id);
+        HashMap<String, String> errorMap = (HashMap<String, String>) result.getRenderable();
 
         assertEquals(400, result.getStatusCode());
-        assertEquals(id + " is less than 1", result.getRenderable());
+        assertEquals(id + " is less than 1", errorMap.get("text"));
     }
 
 }

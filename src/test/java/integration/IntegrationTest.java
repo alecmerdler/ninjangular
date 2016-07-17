@@ -86,16 +86,26 @@ public class IntegrationTest extends NinjaTest {
     public void testBudgetGETNegativeID() {
         int id = -1;
         String result = ninjaTestBrowser.makeJsonRequest(budgetsResource + "/" + id);
-        assertEquals(id + " is less than 1", result.replaceAll("^\"|\"$", ""));
+        try {
+            HashMap<String, String> resultMap = objectMapper.readValue(result, HashMap.class);
+            assertEquals(id + " is less than 1", resultMap.get("text"));
+        }
+        catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     @Test
     public void testBudgetGETNonexistentID() {
         int id = 20000;
         String result = ninjaTestBrowser.makeRequest(budgetsResource + "/" + id);
-
-        // Strip quotes from result string
-        assertEquals("Budget with id could not be found", result.replaceAll("^\"|\"$", ""));
+        try {
+            HashMap<String, String> resultMap = objectMapper.readValue(result, HashMap.class);
+            assertEquals("Budget with id could not be found", resultMap.get("text"));
+        }
+        catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 
 }
